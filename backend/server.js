@@ -2,9 +2,9 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import "dotenv/config";
-import router from "./router/router.js";
-import userRouter from "./router/users.js";
-import { getPost, personalPost, post } from "./router/postRouter.js";
+import router from "./router/auth.router.js";
+import userRouter from "./router/users.router.js";
+import { post, getPost, personalPost } from "./controllers/post.controller.js";
 import cookieParser from "cookie-parser";
 import { uploads } from "./middleware/multer.js";
 
