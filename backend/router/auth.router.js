@@ -45,9 +45,11 @@ router.post("/login", async (req, res) => {
     if (existingUser) {
       const profileImg = existingUser.profileImg;
       const passOk = await bcryptjs.compare(password, existingUser.password);
+
+      const { password: pass, ...rest } = existingUser._doc;
       if (!passOk) {
         console.log(passOk);
-        return res.json({ message: "Wrong Password" });
+        return res.json({ message: "Wrong Credentials" });
       } else {
         console.log(passOk);
 
@@ -64,11 +66,11 @@ router.post("/login", async (req, res) => {
         res
           .status(201)
           .cookie("access_token", token)
-          .json({ token, userID: existingUser._id });
+          .json({ token, userID: existingUser._id, rest });
       }
     } else {
-      console.log("This user does not exist");
-      return res.json({ message: "This user does not exist" });
+      console.log("Wrong User Credentials");
+      return res.json({ message: "Wrong User Credentials" });
     }
   } catch (error) {
     console.log("This user does not exist");
