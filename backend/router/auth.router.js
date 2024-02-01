@@ -77,6 +77,40 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// Google Login
+router.post("/google", async (req, res) => {
+  const { firstname, lastname, email, googlePhotoUrl } = req.body;
+  // const profileImg = await uploadOnCloudinary(googlePhotoUrl);
+  try {
+    const user = await User.findOne({ email });
+
+    if (user) {
+      const token = jwt.sign({ id: user._id }, process.env.SECRETE);
+      const { password, ...rest } = user._doc;
+      res.status(201).cookie("access_token", token).json({ token, rest });
+    } else {
+      const generatedPassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+
+      const hashedPassword = await bcryptjs.hash(generatedPassword, saltRounds);
+      const newUser = await User.create({
+        firstname,
+        lastname,
+        email,
+        password: hashedPassword,
+        profileImg: googlePhotoUrl,
+      });
+
+      const token = jwt.sign({ id: newUser._id }, process.env.SECRETE);
+      const { password, ...rest } = newUser._doc;
+      res.status(201).cookie("access_token", token).json(rest);
+    }
+  } catch (error) {
+    res.status(401).json(error);
+  }
+});
+
 // Profile Route
 router.get("/profile", (req, res) => {
   const { access_token } = req.cookies;

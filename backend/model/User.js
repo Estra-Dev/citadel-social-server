@@ -24,7 +24,11 @@ const userSchema = new Schema({
     min: 2,
     max: 50,
   },
-  profileImg: String,
+  profileImg: {
+    type: String,
+    default:
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+  },
 });
 
 const User = model("User", userSchema);
