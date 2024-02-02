@@ -79,7 +79,7 @@ router.post("/login", async (req, res) => {
 
 // Google Login
 router.post("/google", async (req, res) => {
-  const { firstname, lastname, email, googlePhotoUrl } = req.body;
+  const { firstname, lastname, email, profileImg } = req.body;
   // const profileImg = await uploadOnCloudinary(googlePhotoUrl);
   try {
     const user = await User.findOne({ email });
@@ -99,7 +99,7 @@ router.post("/google", async (req, res) => {
         lastname,
         email,
         password: hashedPassword,
-        profileImg: googlePhotoUrl,
+        profileImg: profileImg,
       });
 
       const token = jwt.sign({ id: newUser._id }, process.env.SECRETE);
